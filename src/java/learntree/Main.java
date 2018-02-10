@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String csvFile = "../../../mini-project/mnist_test.csv";
+        String csvFile = "mnist_test.csv";
         String line = "";
         String cvsSplitBy = ",";
 
@@ -29,6 +29,9 @@ public class Main {
             e.printStackTrace();
         }
 
+        // System.out.println("args[0]: " + args[0]);
+        // System.out.println("args[1]: " + args[1]);
+        // System.out.println("args[2]: " + args[2]);
     }
 
 }
