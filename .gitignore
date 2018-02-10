@@ -1,2 +1,6 @@
-mnist_test.csv
-mnist_train.csv
+*.csv
+src/java/learntree/*.class
+src/c/compile/*.o
+src/c/run/*.o
+compile
+learntree
