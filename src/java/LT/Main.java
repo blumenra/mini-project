@@ -1,5 +1,8 @@
 package src.java.LT;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -13,6 +16,13 @@ public class Main {
 
         Data_Set trainingSet = new Data_Set(csvFile);
         Data_Set validationSet = Data_Set.CreatValidationSet(trainingSet, P);
+
+        List<DecisionTree.Node> conditions = createConditionsSet();
+        DecisionTree tree = new DecisionTree(trainingSet.getMostCommonLabel());
+        Example e = trainingSet.remove(0);
+        System.out.println("tree.getRoot().cond(trainingSet.get(0)) (before): " + tree.getRoot().cond(e));
+        tree.setNode(tree.getRoot(), conditions.get(0));
+        System.out.println("tree.getRoot().cond(trainingSet.get(0)) (after): " + tree.getRoot().cond(e));
 
 //        System.out.println();
 //        System.out.println("validationSetSize: " + validationSet.size());
@@ -46,5 +56,26 @@ public class Main {
         }
 
         return tree;
+    }
+
+    public static List<DecisionTree.Node> createConditionsSet(){
+
+        List<DecisionTree.Node> conditions = new ArrayList<>();
+
+        for(int i=0; i < 28; i++){
+            int[] i0 = {i};
+            for(int j=0; j < 28; j++){
+                int[] j0 = {j};
+
+                conditions.add(new DecisionTree.Node() {
+                    @Override
+                    public boolean cond(Example e) {
+                        return (e.getPixel(i0[0], j0[0]) > 128);
+                    }
+                });
+            }
+        }
+
+        return conditions;
     }
 }
