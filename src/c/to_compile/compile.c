@@ -5,13 +5,14 @@ int main(int argc, char *argv[]){
 
 	printf("Compiling..\n");
 
-	int javaFilesCount = 2;
+	int javaFilesCount = 3;
 	char *javaFilesToCompile[1 + javaFilesCount];
 	unsigned int i = 0;
 
 	javaFilesToCompile[i++] = "javac";
 	javaFilesToCompile[i++] = "src/java/learntree/Main.java";
 	javaFilesToCompile[i++] = "src/java/learntree/Example.java";
+	javaFilesToCompile[i++] = "src/java/learntree/Data_Set.java";
 	javaFilesToCompile[i] = NULL;
 
 	
