@@ -4,3 +4,5 @@ src/c/to_compile/*.o
 src/c/run/*.o
 compile
 learntree
+.idea
+*.iml
