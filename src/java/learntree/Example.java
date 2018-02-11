@@ -5,17 +5,22 @@ package src.java.learntree;
  * Created by blumenra on 10/02/18.
  */
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 public class Example {
 
+    private String csvFileName;
     private int label;
-    private String[] pixles;
+    private int index;
 
-    public Example(String[] example){
+    public Example(int index, int label, String csvFileName){
 
-        this.label = Integer.parseInt(example[0]);
-        this.pixles = Arrays.copyOfRange(example, 1, example.length);
+        this.csvFileName = csvFileName;
+        this.label = label;
+        this.index = index;
     }
 
     public int getLabel(){
@@ -23,9 +28,29 @@ public class Example {
         return this.label;
     }
 
-    public int getPixle(int i, int j){
+    public int getIndex(){
+        return this.index;
+    }
 
-        int pixleIJ = Integer.parseInt(this.pixles[(i*28)+j]);
-        return pixleIJ;
+    public String[] getPixels(){
+
+        String cvsSplitBy = ",";
+        String pixels = "";
+        try (Stream<String> lines = Files.lines(Paths.get(this.csvFileName))) {
+            pixels =  lines.skip(this.index-1).findFirst().get();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return pixels.split(cvsSplitBy);
+    }
+
+    /*
+    returns the pixels value on the @i-th row, @j-th column
+     */
+    public int getPixel(int i, int j){
+
+        return Integer.parseInt(this.getPixels()[(i*28)+j]);
     }
 }
