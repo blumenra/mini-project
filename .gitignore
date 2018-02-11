@@ -6,3 +6,4 @@ compile
 learntree
 .idea
 *.iml
+out
