@@ -18,11 +18,16 @@ public class Main {
         Data_Set validationSet = Data_Set.CreatValidationSet(trainingSet, P);
 
         List<DecisionTree.Node> conditions = createConditionsSet();
-        DecisionTree tree = new DecisionTree(trainingSet.getMostCommonLabel());
-        Example e = trainingSet.remove(0);
-        System.out.println("tree.getRoot().cond(trainingSet.get(0)) (before): " + tree.getRoot().cond(e));
-        tree.setNode(tree.getRoot(), conditions.get(0));
-        System.out.println("tree.getRoot().cond(trainingSet.get(0)) (after): " + tree.getRoot().cond(e));
+//        DecisionTree tree = new DecisionTree(trainingSet.getMostCommonLabel());
+
+
+
+
+//        Example e = trainingSet.remove(0);
+//        System.out.println("e.getPixel(27, 27): " + e.getPixel(27, 27));
+//        System.out.println("tree.getRoot().cond(trainingSet.get(0)) (before): " + tree.getRoot().cond(e));
+//        tree.setNode(tree.getRoot(), conditions.get(conditions.size()-1));
+//        System.out.println("tree.getRoot().cond(trainingSet.get(0)) (after): " + tree.getRoot().cond(e));
 
 //        System.out.println();
 //        System.out.println("validationSetSize: " + validationSet.size());

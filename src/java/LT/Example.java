@@ -50,8 +50,7 @@ public class Example {
     returns the pixels value on the @i-th row, @j-th column
      */
     public int getPixel(int i, int j){
-        System.out.println("i: " + i);
-        System.out.println("j: " + j);
-        return Integer.parseInt(this.getPixels()[(i*28)+j]);
+
+        return Integer.parseInt(this.getPixels()[(i*28)+j+1]);
     }
 }
