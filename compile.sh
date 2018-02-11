@@ -1,7 +1,7 @@
 #!/bin/bash
 
-make -C src/c/compile clean
-make -C src/c/compile
+make -C src/c/to_compile clean
+make -C src/c/to_compile
 
 ./compile
 rm -f compile
