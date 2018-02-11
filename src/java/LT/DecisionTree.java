@@ -1,4 +1,4 @@
-package src.java.learntree;
+package src.java.LT;
 
 /**
  * Created by blumenra on 2/11/18.

@@ -1,4 +1,4 @@
-package src.java.learntree;
+package src.java.LT;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

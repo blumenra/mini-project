@@ -1,4 +1,4 @@
-package src.java.learntree;
+package src.java.LT;
 
 public class Main {
 

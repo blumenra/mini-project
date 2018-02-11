@@ -1,5 +1,5 @@
 
-package src.java.learntree;
+package src.java.LT;
 
 /**
  * Created by blumenra on 10/02/18.
