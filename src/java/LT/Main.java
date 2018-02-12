@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IllegalArgumentException {
 
         int version = Integer.parseInt(args[0]);
         double P = Double.parseDouble(args[1]);
@@ -16,12 +16,26 @@ public class Main {
 
         Data_Set trainingSet = new Data_Set(csvFile);
         Data_Set validationSet = Data_Set.CreatValidationSet(trainingSet, P);
+        List<DecisionTree.Node> conditions;
 
-        List<DecisionTree.Node> conditions = createConditionsSet();
+        if(version == 1){
+
+            conditions = createConditionsSetVersion1();
+        }
+        else if(version == 2){
+//             TODO: Handle conditions for version 2
+        }
+        else{
+            throw new IllegalArgumentException("version " + version + " is illegal. please choose version between 1/2");
+        }
+
+//        TODO: Release this loop eventually
+//        for(int k=0; k < L; k++)
+//          CreateDecisionTree(trainingSet, k);
+          CreateDecisionTree(trainingSet, 0); //TODO: Remove this eventually for the general case of k
+
+
 //        DecisionTree tree = new DecisionTree(trainingSet.getMostCommonLabel());
-
-
-
 
 //        Example e = trainingSet.remove(0);
 //        System.out.println("e.getPixel(27, 27): " + e.getPixel(27, 27));
@@ -37,8 +51,6 @@ public class Main {
 //        trainingSet.printLabelInstances();
 //        System.out.println("Most common label in traning set: " + trainingSet.getMostCommonLabel());
 //        System.out.println("Most common label in validation set: " + validationSet.getMostCommonLabel());
-//        for(int k=0; k < L; k++)
-//            CreateDecisionTree(trainingSet, k);
 
     }
 
@@ -63,7 +75,7 @@ public class Main {
         return tree;
     }
 
-    public static List<DecisionTree.Node> createConditionsSet(){
+    public static List<DecisionTree.Node> createConditionsSetVersion1(){
 
         List<DecisionTree.Node> conditions = new ArrayList<>();
 
