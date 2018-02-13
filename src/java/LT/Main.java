@@ -23,16 +23,17 @@ public class Main {
             conditions = createConditionsSetVersion1();
         }
         else if(version == 2){
-//             TODO: Handle conditions for version 2
+            //TODO: Handle conditions for version 2
+            conditions = createConditionsSetVersion1(); //TODO: remove this line if not necessary. put it only for the code to temporary run
         }
         else{
             throw new IllegalArgumentException("version " + version + " is illegal. please choose version between 1/2");
         }
 
-//        TODO: Release this loop eventually
+        //TODO: Release this loop eventually
 //        for(int k=0; k < L; k++)
 //          CreateDecisionTree(trainingSet, k);
-          CreateDecisionTree(trainingSet, 0); //TODO: Remove this eventually for the general case of k
+          CreateDecisionTree(trainingSet, conditions,0); //TODO: Remove this eventually for the general case of k
 
 
 //        DecisionTree tree = new DecisionTree(trainingSet.getMostCommonLabel());
@@ -64,12 +65,12 @@ public class Main {
         System.out.println("output file name: " + args[4]);
     }
 
-    public static DecisionTree CreateDecisionTree(Data_Set trainingSet, int k){
+    public static DecisionTree CreateDecisionTree(Data_Set trainingSet, List<DecisionTree.Node> conditions,int k){
 
         DecisionTree tree = new DecisionTree(trainingSet.getMostCommonLabel());
         int T = (int) Math.pow(2, k);
-        for(int i=0; i < T; i++){
-
+        for(int i=0; i < T; i++){ //increase the tree to the size of T so that it has the best entropy
+            tree.improve(trainingSet, conditions); //find the leaf and the condition to replace with one another and make the swap
         }
 
         return tree;

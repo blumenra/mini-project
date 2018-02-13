@@ -14,6 +14,12 @@ import java.util.Map;
 public class Data_Set {
 
     private String csvFile;
+
+    public List<Example> getExamples() {
+
+        return examples;
+    }
+
     private List<Example> examples = new ArrayList<>();
     private Map<Integer, Integer> labelsInstances = new HashMap<>();
 

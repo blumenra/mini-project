@@ -8,6 +8,7 @@ package src.java.LT;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Example {
@@ -52,5 +53,29 @@ public class Example {
     public int getPixel(int i, int j){
 
         return Integer.parseInt(this.getPixels()[(i*28)+j+1]);
+    }
+
+
+    /*
+    Returns the label that
+     */
+    public static int most_appeared_digit(List<Example> n_set) {
+
+        int[] counter = new int[10];
+        int most_appeared_digit = 0;
+
+        for(Example example : n_set){
+
+            counter[example.getLabel()]++;
+        }
+
+        int max = counter[0];
+        for(int j=0; j < counter.length; j++){
+            if (counter[j] > max) {
+                most_appeared_digit = j;
+            }
+        }
+
+        return most_appeared_digit;
     }
 }
