@@ -68,10 +68,12 @@ public class Main {
     public static DecisionTree CreateDecisionTree(Data_Set trainingSet, List<DecisionTree.Node> conditions,int k){
 
         DecisionTree tree = new DecisionTree(trainingSet.getMostCommonLabel());
-        int T = (int) Math.pow(2, k);
-        for(int i=0; i < T; i++){ //increase the tree to the size of T so that it has the best entropy
+        System.out.println("tree's root: " + tree.getRoot().getLabel());
+        // TODO: uncomment the following..
+//        int T = (int) Math.pow(2, k);
+//        for(int i=0; i < T; i++){ //increase the tree to the size of T so that it has the best entropy
             tree.improve(trainingSet, conditions); //find the leaf and the condition to replace with one another and make the swap
-        }
+//        }
 
         return tree;
     }

@@ -70,17 +70,24 @@ public class DecisionTree {
             return;
         }
 
-        Node bestLeaf = this.leaves.get(0);
-        Node bestCond = conditions.get(0);
-        double bestIG = this.calcIG(trainingSet, bestCond, bestLeaf);; // TODO: not sure if IG supposed to be double or float. have to check both cases and pick the better one
+        Node bestLeaf = new Node();
+        Node bestCond = new Node();
+//        System.out.println("Is this.leaves empty? " + this.leaves.isEmpty());
+//        System.out.println("Initial bestLeaf: " + bestLeaf.getLabel());
+//        System.out.println("Initial bestCond: " + bestCond.getLabel());
+//        double bestIG = this.calcIG(trainingSet, bestCond, bestLeaf);; // TODO: not sure if IG supposed to be double or float. have to check both cases and pick the better one
+        double bestIG = 0;; // TODO: not sure if IG supposed to be double or float. have to check both cases and pick the better one
 
         double IG;
         for(Node cond : conditions){
             // TODO: maybe I should check if cond == bestCond (for the first iteration) to avoid calculating for it because it was already done before the loop
-//            for(Node leaf : this.leaves){
+            System.out.println("bestIG: " + bestIG);
+            System.out.println("cond: " + cond.getLabel());
             for(Node leaf : this.leaves.keySet()){
                 // TODO: maybe I should check if leaf == bestLeaf (for the first iteration) to avoid calculating for it because it was already done before the loop
+                System.out.println("leaf: " + leaf.getLabel());
                 IG = this.calcIG(trainingSet, cond, leaf); // TODO: not sure if IG supposed to be double or float. have to check both cases and pick the better one
+                System.out.println("IG: " + IG);
                 if(IG > bestIG){
                     bestLeaf = leaf;
                     bestCond = cond;
@@ -128,7 +135,8 @@ public class DecisionTree {
     IG(X, L) = H(L) - H(X)
      */
     private double calcIG(Data_Set trainingSet, Node cond, Node leaf) {
-
+        System.out.println("this.calcH_Leaf(trainingSet, leaf): " + this.calcH_Leaf(trainingSet, leaf));
+        System.out.println("this.calcH_Cond(trainingSet, cond): " + this.calcH_Cond(trainingSet, cond));
         return this.calcH_Leaf(trainingSet, leaf) - this.calcH_Cond(trainingSet, cond);
     }
 
@@ -202,6 +210,20 @@ public class DecisionTree {
             H_Lb += (Ni_Lb/N_Lb)*(this.log(2, N_Lb/Ni_Lb));
         }
 
+
+        System.out.println("N_Set: " + N_Set);
+        System.out.println("N_L: " + N_L);
+        System.out.println("N_SetA: " + N_SetA.toString());
+        System.out.println("N_SetB: " + N_SetB.toString());
+        System.out.println("N_La: " + N_La);
+        System.out.println("Ni_La: " + Ni_La);
+        System.out.println("N_Lb: " + N_Lb);
+        System.out.println("Ni_Lb: " + Ni_Lb);
+        System.out.println("H_La: " + H_La);
+        System.out.println("H_Lb: " + H_Lb);
+        System.out.println("Hx: " + ((N_SetA.size()/N_L)*H_La) + ((N_SetB.size()/N_L)*H_Lb));
+
+
         // return H(X)
         return ((N_SetA.size()/N_L)*H_La) + ((N_SetB.size()/N_L)*H_Lb);
     }
@@ -233,6 +255,8 @@ public class DecisionTree {
         for(Example example : trainingSet.getExamples()){
 
             destLeaf = this.execOn(example);
+//            System.out.println("destLeaf: " + destLeaf.getLabel());
+//            System.out.println("leaf: " + leaf.getLabel());
             if(destLeaf == leaf)
                 N_Set.add(example);
         }
