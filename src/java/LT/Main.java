@@ -7,6 +7,8 @@ public class Main {
 
     public static void main(String[] args) throws IllegalArgumentException {
 
+        // TODO: change in configuration the csv file to mnist_test.csv
+        // TODO: handle errors such as files that wont open, bad arguments etc.
         int version = Integer.parseInt(args[0]);
         double P = Double.parseDouble(args[1]);
         int L = Integer.parseInt(args[2]);

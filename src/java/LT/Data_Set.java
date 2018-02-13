@@ -151,14 +151,20 @@ public class Data_Set {
 
     public int getMostCommonLabel(){
 
+        printLabelInstances();
         int ans = 0;
+        int maxValue = 0;
         int value;
+        int  index = 0;
         for(Integer label : this.labelsInstances.keySet()){
 
             value = this.labelsInstances.get(label);
-            if(value > ans){
-                ans = value;
+            if(maxValue < value){
+                maxValue = value;
+                ans = index;
             }
+
+            index++;
         }
 
         return ans;
