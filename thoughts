@@ -1,0 +1,17 @@
+
+functions testing order: tree: improve
+                                    ==> calcIG
+                                        ==> calcH
+                                            ==> calcN(set, L)
+                                                calcN(set, L, i)
+                                                ==> retrieveN_Set(trainingSet, leaf)
+                                                    retrieveN_Set(trainingSet, leaf, i)
+                                                    ==> Example.most_appeared_digit
+
+
+
+tasks:
+    - do all TODOs
+    - remove unused statements like meaningless imports, variables and so on
+    - remove unneeded prints
+    - 
