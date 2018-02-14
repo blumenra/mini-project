@@ -1,12 +1,17 @@
 
-functions testing order: tree: improve
-                                    ==> calcIG
-                                        ==> calcH
-                                            ==> calcN(set, L)
-                                                calcN(set, L, i)
-                                                ==> retrieveN_Set(trainingSet, leaf)
-                                                    retrieveN_Set(trainingSet, leaf, i)
-                                                    ==> Example.most_appeared_digit
+functions testing order: tree: improve: : { conditions(Node), leaves(Node), N_Set(Example) }
+                                ==> Example.most_appeared_digit()
+                                    calcN(set, L)
+                                    ==> retrieveN_Set: { trainingSet.getExamples()(Example) }
+                                        ==> execOn: { tree_height }
+                                    calcIG
+                                    ==> calcH_Cond: { N_set_ForLeaf(Example), leaves(Node), N_SetA(Example), N_SetB(Example) }
+                                        calcH_Leaf: { leaves(Node) }
+                                        ==> calcN(set, L, i)
+                                            ==> retrieveN_Set(trainingSet, leaf, i): { N_Set(Example) }
+                                                ==> retrieveN_Set(trainingSet, leaf): { trainingSet.getExamples()(Example) }
+
+
 
 
 
@@ -14,4 +19,9 @@ tasks:
     - do all TODOs
     - remove unused statements like meaningless imports, variables and so on
     - remove unneeded prints
-    - 
+    -
+
+
+
+
+
