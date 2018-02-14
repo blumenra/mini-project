@@ -55,19 +55,29 @@ public class Example {
         return Integer.parseInt(this.getPixels()[(i*28)+j+1]);
     }
 
+    /*
+    Returns an array of the number of appearance of each example in @n_set
+     */
+    private static int[] get_digits_info(List<Example> n_set) {
+
+        int[] counter = new int[10];
+
+        for(Example example : n_set){
+
+            counter[example.getLabel()]++;
+        }
+
+        return counter;
+    }
+
 
     /*
     Returns the label that
      */
     public static int most_appeared_digit(List<Example> n_set) {
 
-        int[] counter = new int[10];
+        int[] counter = get_digits_info(n_set);
         int most_appeared_digit = 0;
-
-        for(Example example : n_set){
-
-            counter[example.getLabel()]++;
-        }
 
         int max = counter[0];
         for(int j=0; j < counter.length; j++){
