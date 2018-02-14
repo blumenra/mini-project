@@ -1,5 +1,5 @@
 *.csv
-src/java/learntree/*.class
+src/java/LT/*.class
 src/c/to_compile/*.o
 src/c/run/*.o
 compile
