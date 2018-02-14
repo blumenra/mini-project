@@ -10,6 +10,8 @@ public class DecisionTree {
 
     private Node root;
     private Map<Node, Node> leaves;
+    private Map<Node, List<Example>> S_l = new HashMap<>(); // Map between leaves and their N(L)
+    private Map<Node, List<Example>> Si_l = new HashMap<>();// Map between leaves and their Ni(L)
 
     public DecisionTree() {
         this.root = null;
@@ -52,6 +54,8 @@ public class DecisionTree {
     private void removeFromLeavesList(Node leaf){
 
         if(leaf != null && leaf.isLeaf() && this.leaves.containsKey(leaf)){
+            this.S_l.remove(leaf);
+            this.Si_l.remove(leaf);
             this.leaves.remove(leaf);
         }
     }
@@ -84,12 +88,16 @@ public class DecisionTree {
         System.out.println("Num of conditions: " + conditions.size());
 
         for(Node cond : conditions){
+            System.out.println("for conditions(Node) in improve()");
+//            if(i == 1)
+//                return;
             // TODO: maybe I should check if cond == bestCond (for the first iteration) to avoid calculating for it because it was already done before the loop
             System.out.println("bestIG: " + bestIG);
-            System.out.println("cond " + i + ": " + cond.getLabel());
+            System.out.println("*************************cond " + i + ": " + cond.getLabel());
 
             for(Node leaf : this.leaves.keySet()){
                 System.out.println("Num of leaves: " + this.leaves.size());
+                System.out.println("for leaves(Node) in improve()");
                 // TODO: maybe I should check if leaf == bestLeaf (for the first iteration) to avoid calculating for it because it was already done before the loop
                 System.out.println("leaf " + j + ": " + leaf.getLabel());
                 IG = this.calcN(trainingSet, leaf)*this.calcIG(trainingSet, cond, leaf); // TODO: not sure if IG supposed to be double or float. have to check both cases and pick the better one
@@ -119,7 +127,7 @@ public class DecisionTree {
         List<Example> N_LeftChild_Set = new ArrayList<>();
         List<Example> N_RightChild_Set = new ArrayList<>();
         for(Example e : N_Set){
-
+            System.out.println("for N_Set(Example) in improve()");
             if(bestCond.cond(e)) {
                 N_LeftChild_Set.add(e);
             }
@@ -148,8 +156,8 @@ public class DecisionTree {
 //        System.out.println("this.calcH_Cond(trainingSet, cond): " + this.calcH_Cond(trainingSet, cond));
         List<Example> N_set_ForLeaf = this.retrieveN_Set(trainingSet, leaf);
         double l = this.calcH_Leaf(trainingSet, leaf, N_set_ForLeaf); //TODO: REMOVE ME
-        double x = this.calcH_Cond(cond, N_set_ForLeaf); //TODO: REMOVE ME
         System.out.println("H(L): " + l);
+        double x = this.calcH_Cond(cond, N_set_ForLeaf); //TODO: REMOVE ME
         System.out.println("H(X): " + x);
         System.out.println("H(L) - H(X): " + (l-x));
         return l - x; //TODO: REMOVE ME
@@ -174,6 +182,7 @@ public class DecisionTree {
             else{
 
                 for(int i=0; i < this.leaves.size(); i++){
+                    System.out.println("for leaves(Node) in calcH_Leaf()");
 
                     Ni_L = this.calcN(trainingSet, leaf, i);
 
@@ -198,14 +207,23 @@ public class DecisionTree {
 
         List<Example> N_SetA = new ArrayList<>();
         List<Example> N_SetB = new ArrayList<>();
+        int[] Ni_SetA = new int[10];
+        int[] Ni_SetB = new int[10];
 
+        int label;
         System.out.println("N_set_ForLeaf size in calcH_Cond: " + N_set_ForLeaf.size());
         for(Example example : N_set_ForLeaf){
+//            System.out.println("for N_set_ForLeaf(Example) in calcH_Cond()");
+
+            label = example.getLabel();
+
             if(cond.cond(example)){
                 N_SetA.add(example);
+                Ni_SetA[label]++;
             }
             else {
                 N_SetB.add(example);
+                Ni_SetB[label]++;
             }
         }
 
@@ -221,18 +239,26 @@ public class DecisionTree {
         double Ni_Lb = 0;
         for(int i=0; i < this.leaves.size(); i++){
 
-            System.out.println("N_SetA size in calcH_Cond: " + N_SetA.size());
-            for(Example e : N_SetA){
-                if(e.getLabel() == i) {
-                    Ni_La++;
-                }
-            }
-            System.out.println("N_SetB size in calcH_Cond: " + N_SetB.size());
-            for(Example e : N_SetB){
-                if(e.getLabel() == i) {
-                    Ni_Lb++;
-                }
-            }
+            System.out.println("for leaves(Node) in calcH_Cond()");
+
+//            System.out.println("N_SetA size in calcH_Cond: " + N_SetA.size());
+//            for(Example e : N_SetA){
+////                System.out.println("for N_SetA(Example) in calcH_Cond()");
+//                if(e.getLabel() == i) {
+//                    Ni_La++;
+//                }
+//            }
+//            System.out.println("N_SetB size in calcH_Cond: " + N_SetB.size());
+//
+//            for(Example e : N_SetB){
+////                System.out.println("for N_SetB(Example) in calcH_Cond()");
+//                if(e.getLabel() == i) {
+//                    Ni_Lb++;
+//                }
+//            }
+
+            Ni_La = Ni_SetA[i];
+            Ni_Lb = Ni_SetB[i];
 
             if(N_La != 0 && Ni_La != 0){
 
@@ -241,9 +267,6 @@ public class DecisionTree {
             else if(N_Lb != 0 && Ni_Lb != 0){
 
                 H_Lb += (Ni_Lb/N_Lb)*(this.log(2, N_Lb/Ni_Lb));
-            }
-            else{
-
             }
         }
 
@@ -286,17 +309,19 @@ public class DecisionTree {
      */
     private List<Example> retrieveN_Set(Data_Set trainingSet, Node leaf) {
 
-        List<Example> N_Set = new ArrayList<>();
+        List<Example> N_Set = this.S_l.get(leaf);
+        if(N_Set != null){
+            return N_Set;
+        }
 
+        N_Set = new ArrayList<>();
         System.out.println("trainingSet size in retrieveN_Set: " + trainingSet.size());
 
         Node destLeaf;
         int i = 0; // TODO: REMOVE ME
         for(Example example : trainingSet.getExamples()){
+            System.out.println("for trainingSet.getExamples()(Example) in retrieveN_Set()");
             destLeaf = this.execOn(example);
-//            System.out.println("destLeaf: " + destLeaf.getLabel());
-//            System.out.println("leaf: " + leaf.getLabel());
-//            System.out.println("i: " + i);
             if(destLeaf == leaf){
 
                 N_Set.add(example);
@@ -305,6 +330,7 @@ public class DecisionTree {
 
         }
 
+        this.S_l.put(leaf, N_Set);
         return N_Set;
     }
 
@@ -351,7 +377,7 @@ public class DecisionTree {
 
 
         for(Example example : N_Set){
-
+//            System.out.println("for N_Set(Example) in retrieveN_Set(i)");
             if(example.getLabel() == i)
                 Ni_Set.add(example);
         }
