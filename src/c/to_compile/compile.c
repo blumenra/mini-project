@@ -10,10 +10,10 @@ int main(int argc, char *argv[]){
 	unsigned int i = 0;
 
 	javaFilesToCompile[i++] = "javac";
-	javaFilesToCompile[i++] = "src/java/learntree/Main.java";
-	javaFilesToCompile[i++] = "src/java/learntree/Example.java";
-	javaFilesToCompile[i++] = "src/java/learntree/Data_Set.java";
-	javaFilesToCompile[i++] = "src/java/learntree/DecisionTree.java";
+	javaFilesToCompile[i++] = "src/java/LT/Main.java";
+	javaFilesToCompile[i++] = "src/java/LT/Example.java";
+	javaFilesToCompile[i++] = "src/java/LT/Data_Set.java";
+	javaFilesToCompile[i++] = "src/java/LT/DecisionTree.java";
 	javaFilesToCompile[i] = NULL;
 
 	

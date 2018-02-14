@@ -6,7 +6,7 @@ int main(int argc, char *argv[]){
 	unsigned int i = 0;
 
 	javaFileToRun[i++] = "java";
-	javaFileToRun[i++] = "src/java/learntree/Main";
+	javaFileToRun[i++] = "src/java/LT/Main";
 	
 	for(; i < argc + 1; i++){
 		javaFileToRun[i] = argv[i-1];
