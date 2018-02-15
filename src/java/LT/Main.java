@@ -95,6 +95,12 @@ public class Main {
                         return (e.getPixel(i0[0], j0[0]) > 128);
                     }
                 });
+//                conditions.add(new DecisionTree.Node() { //TODO: REMOVE ME
+//                    @Override
+//                    public boolean cond(Example e) {
+//                        return (e.getLabel() > 5);
+//                    }
+//                });
             }
         }
 
