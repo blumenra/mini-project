@@ -19,7 +19,8 @@ tasks:
     - do all TODOs
     - remove unused statements like meaningless imports, variables and so on
     - remove unneeded prints
-    -
+    - handle exceptions for the input arguments such as file not found, invalid version and so on
+    - check if the interface Condition is really needed for the program
 
 
 
