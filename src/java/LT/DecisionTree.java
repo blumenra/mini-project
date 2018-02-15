@@ -10,8 +10,8 @@ public class DecisionTree {
 
     private Node root;
     private Map<Node, Node> leaves;
-    private Map<Node, List<Example>> S_l = new HashMap<>(); // Map between leaves and their N(L)
-    private Map<Node, List<Example>> Si_l = new HashMap<>();// Map between leaves and their Ni(L)
+//    private Map<Node, List<Example>> S_l = new HashMap<>(); // Map between leaves and their N(L)
+//    private Map<Node, List<Example>> Si_l = new HashMap<>();// Map between leaves and their Ni(L)
 
     public DecisionTree() {
         this.root = null;
@@ -54,8 +54,8 @@ public class DecisionTree {
     private void removeFromLeavesList(Node leaf){
 
         if(leaf != null && leaf.isLeaf() && this.leaves.containsKey(leaf)){
-            this.S_l.remove(leaf);
-            this.Si_l.remove(leaf);
+//            this.S_l.remove(leaf);
+//            this.Si_l.remove(leaf);
             this.leaves.remove(leaf);
         }
     }
@@ -241,22 +241,6 @@ public class DecisionTree {
 
             System.out.println("for leaves(Node) in calcH_Cond()");
 
-//            System.out.println("N_SetA size in calcH_Cond: " + N_SetA.size());
-//            for(Example e : N_SetA){
-////                System.out.println("for N_SetA(Example) in calcH_Cond()");
-//                if(e.getLabel() == i) {
-//                    Ni_La++;
-//                }
-//            }
-//            System.out.println("N_SetB size in calcH_Cond: " + N_SetB.size());
-//
-//            for(Example e : N_SetB){
-////                System.out.println("for N_SetB(Example) in calcH_Cond()");
-//                if(e.getLabel() == i) {
-//                    Ni_Lb++;
-//                }
-//            }
-
             Ni_La = Ni_SetA[i];
             Ni_Lb = Ni_SetB[i];
 
@@ -309,12 +293,18 @@ public class DecisionTree {
      */
     private List<Example> retrieveN_Set(Data_Set trainingSet, Node leaf) {
 
-        List<Example> N_Set = this.S_l.get(leaf);
+        List<Example> N_Set = leaf.getS();
         if(N_Set != null){
             return N_Set;
         }
 
         N_Set = new ArrayList<>();
+
+        // Initialize Ni_Set
+        Map<Integer, List<Example>> Ni_Set = new HashMap<>();
+        for(int i=0; i < 10; i++)
+            Ni_Set.put(i, new ArrayList<>());
+
         System.out.println("trainingSet size in retrieveN_Set: " + trainingSet.size());
 
         Node destLeaf;
@@ -325,12 +315,15 @@ public class DecisionTree {
             if(destLeaf == leaf){
 
                 N_Set.add(example);
+                Ni_Set.get(example.getLabel()).add(example);
+
                 i++; // TODO: REMOVE ME
             }
 
         }
 
-        this.S_l.put(leaf, N_Set);
+        leaf.setS(N_Set);
+        leaf.setSi(Ni_Set);
         return N_Set;
     }
 
@@ -370,28 +363,37 @@ public class DecisionTree {
      */
     private List<Example> retrieveN_Set(Data_Set trainingSet, Node leaf, int i) {
 
-        List<Example> N_Set = this.retrieveN_Set(trainingSet, leaf);
-        List<Example> Ni_Set = new ArrayList<>();
+        List<Example> Ni_Set = leaf.getS(i);
 
-        System.out.println("trainingSet size in retrieveN_Set_i: " + trainingSet.size());
+        if(Ni_Set != null)
+            return Ni_Set;
+
+        retrieveN_Set(trainingSet, leaf);
+//        List<Example> N_Set = this.retrieveN_Set(trainingSet, leaf);
+//        List<Example> Ni_Set = new ArrayList<>();
+//
+//        System.out.println("trainingSet size in retrieveN_Set_i: " + trainingSet.size());
 
 
-        for(Example example : N_Set){
-//            System.out.println("for N_Set(Example) in retrieveN_Set(i)");
-            if(example.getLabel() == i)
-                Ni_Set.add(example);
-        }
+//        for(Example example : N_Set){
+////            System.out.println("for N_Set(Example) in retrieveN_Set(i)");
+//            if(example.getLabel() == i)
+//                Ni_Set.add(example);
+//        }
 
-        return Ni_Set;
+        return leaf.getS(i);
     }
 
     public static class Node {
 
-//        private Condition cond = null;
         private int label;
         private Node parent = null;
         private Node leftChild = null;
         private Node rightChild = null;
+
+        private List<Example> S;
+        private Map<Integer, List<Example>> Si;
+
 
         public Node(int label){
             this.label = label;
@@ -446,5 +448,40 @@ public class DecisionTree {
                     node.getParent().rightChild = this;
             }
         }
+
+        public int getN(){
+
+            return S.size();
+        }
+
+        public List<Example> getS(){
+
+            return this.S;
+        }
+
+        public List<Example> getS(int i){
+
+            if(this.Si == null)
+                return null;
+
+            return this.Si.get(i);
+        }
+
+        public int getN(int i){
+
+            if(this.Si == null)
+                return -1;
+
+            return this.Si.get(i).size();
+        }
+
+        public void setS(List<Example> set) {
+            this.S = set;
+        }
+
+        public void setSi(Map<Integer,List<Example>> si) {
+            this.Si = si;
+        }
     }
+
 }
