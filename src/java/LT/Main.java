@@ -1,11 +1,27 @@
 package src.java.LT;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
 
+    public static Data_Set trainingSet;
+    private static Data_Set validationSet;
+
     public static void main(String[] args) throws IllegalArgumentException {
+
+        // TODO: REMOVE ME (
+//        int[] arr = {0, 1, 2, 3, 4};
+//        int[] copy = Arrays.copyOfRange(arr, 1, 3);
+////        System.out.println("arr: " + arr.toString());
+//        System.out.println("copy length: " + copy.length);
+//        System.out.println("copy[0]: " + copy[0]);
+//        System.out.println("copy[" + (copy.length-1) + "]: " + copy[copy.length-1]);
+        // TODO: REMOVE ME )
+
+
 
         // TODO: change in configuration the csv file to mnist_test.csv
         // TODO: handle errors such as files that wont open, bad arguments etc.
@@ -16,8 +32,8 @@ public class Main {
         String outputFileName = args[4];
         printArgs(args);
 
-        Data_Set trainingSet = new Data_Set(csvFile);
-        Data_Set validationSet = Data_Set.CreatValidationSet(trainingSet, P);
+        trainingSet = new Data_Set(csvFile);
+        validationSet = Data_Set.CreatValidationSet(trainingSet, P);
         List<DecisionTree.Node> conditions;
 
         if(version == 1){
@@ -35,7 +51,7 @@ public class Main {
         //TODO: Release this loop eventually
 //        for(int k=0; k < L; k++)
 //          CreateDecisionTree(trainingSet, k);
-          CreateDecisionTree(trainingSet, conditions,0); //TODO: Remove this eventually for the general case of k
+          CreateDecisionTree(conditions,0); //TODO: Remove this eventually for the general case of k
 
 
 //        DecisionTree tree = new DecisionTree(trainingSet.getMostCommonLabel());
@@ -67,14 +83,14 @@ public class Main {
         System.out.println("output file name: " + args[4]);
     }
 
-    public static DecisionTree CreateDecisionTree(Data_Set trainingSet, List<DecisionTree.Node> conditions,int k){
+    public static DecisionTree CreateDecisionTree(List<DecisionTree.Node> conditions,int k){
 
         DecisionTree tree = new DecisionTree(trainingSet.getMostCommonLabel());
         System.out.println("tree's root: " + tree.getRoot().getLabel());
         // TODO: uncomment the following..
 //        int T = (int) Math.pow(2, k);
 //        for(int i=0; i < T; i++){ //increase the tree to the size of T so that it has the best entropy
-            tree.improve(trainingSet, conditions); //find the leaf and the condition to replace with one another and make the swap
+            tree.improve(conditions); //find the leaf and the condition to replace with one another and make the swap
 //        }
 
         return tree;

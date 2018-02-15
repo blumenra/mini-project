@@ -60,7 +60,7 @@ public class DecisionTree {
         }
     }
 
-    public void improve(Data_Set trainingSet, List<Node> conditions) {
+    public void improve(List<Node> conditions) {
 
         // TODO: find the leaf and condition which create the best improvement
         if(conditions == null){
@@ -100,7 +100,7 @@ public class DecisionTree {
                 System.out.println("for leaves(Node) in improve()");
                 // TODO: maybe I should check if leaf == bestLeaf (for the first iteration) to avoid calculating for it because it was already done before the loop
                 System.out.println("leaf " + j + ": " + leaf.getLabel());
-                IG = this.calcN(trainingSet, leaf)*this.calcIG(trainingSet, cond, leaf); // TODO: not sure if IG supposed to be double or float. have to check both cases and pick the better one
+                IG = this.calcN(leaf)*this.calcIG(cond, leaf); // TODO: not sure if IG supposed to be double or float. have to check both cases and pick the better one
                 System.out.println("IG: " + IG);
                 if(IG > bestIG){
                     bestLeaf = leaf;
@@ -123,7 +123,7 @@ public class DecisionTree {
 
         // TODO: find the left new son for the above condition
         // TODO: find the right new son for the above condition
-        List<Example> N_Set = this.retrieveN_Set(trainingSet, bestLeaf);
+        List<Example> N_Set = this.retrieveN_Set(bestLeaf);
         List<Example> N_LeftChild_Set = new ArrayList<>();
         List<Example> N_RightChild_Set = new ArrayList<>();
         for(Example e : N_Set){
@@ -151,11 +151,11 @@ public class DecisionTree {
     Calculate the IG for @cond and @leaf according to the formula from the project:
     IG(X, L) = H(L) - H(X)
      */
-    private double calcIG(Data_Set trainingSet, Node cond, Node leaf) {
+    private double calcIG(Node cond, Node leaf) {
 //        System.out.println("this.calcH_Leaf(trainingSet, leaf): " + this.calcH_Leaf(trainingSet, leaf));
 //        System.out.println("this.calcH_Cond(trainingSet, cond): " + this.calcH_Cond(trainingSet, cond));
-        List<Example> N_set_ForLeaf = this.retrieveN_Set(trainingSet, leaf);
-        double l = this.calcH_Leaf(trainingSet, leaf, N_set_ForLeaf); //TODO: REMOVE ME
+        List<Example> N_set_ForLeaf = this.retrieveN_Set(leaf);
+        double l = this.calcH_Leaf(leaf, N_set_ForLeaf); //TODO: REMOVE ME
         System.out.println("H(L): " + l);
         double x = this.calcH_Cond(cond, N_set_ForLeaf); //TODO: REMOVE ME
         System.out.println("H(X): " + x);
@@ -167,7 +167,7 @@ public class DecisionTree {
     /*
     Calculate the H for @node according to the formula from the project of H(L) (if L is a leaf) and H(X) (if X is an inner node)
      */
-    private double calcH_Leaf(Data_Set trainingSet, Node leaf, List<Example> N_set_ForLeaf ) {
+    private double calcH_Leaf(Node leaf, List<Example> N_set_ForLeaf ) {
 
         double H = 0;
         if(leaf.isLeaf()){
@@ -184,7 +184,7 @@ public class DecisionTree {
                 for(int i=0; i < this.leaves.size(); i++){
                     System.out.println("for leaves(Node) in calcH_Leaf()");
 
-                    Ni_L = this.calcN(trainingSet, leaf, i);
+                    Ni_L = this.calcN(leaf, i);
 
                     if(Ni_L != 0){
 
@@ -212,11 +212,14 @@ public class DecisionTree {
 
         int label;
         System.out.println("N_set_ForLeaf size in calcH_Cond: " + N_set_ForLeaf.size());
+        int r=0; // TODO: REMOVE ME
         for(Example example : N_set_ForLeaf){
 //            System.out.println("for N_set_ForLeaf(Example) in calcH_Cond()");
 
             label = example.getLabel();
 
+//            System.out.println(r++); // TODO: REMOVE ME
+//            System.out.println("$$$$$$$$$");
             if(cond.cond(example)){
                 N_SetA.add(example);
                 Ni_SetA[label]++;
@@ -225,8 +228,10 @@ public class DecisionTree {
                 N_SetB.add(example);
                 Ni_SetB[label]++;
             }
-        }
 
+
+        }
+            System.out.println("$$$$$$$$$");
 
         // H(La) = ...
         // H(Lb) = ...
@@ -282,16 +287,16 @@ public class DecisionTree {
     /*
     Returns the number of examples in @trainingSet that get to @leaf when starting from the root of the tree
      */
-    private double calcN(Data_Set trainingSet, Node leaf) {
+    private double calcN(Node leaf) {
 
-        return this.retrieveN_Set(trainingSet, leaf).size();
+        return this.retrieveN_Set(leaf).size();
     }
 
 
     /*
     Returns a list of all the examples in @trainingSet that get to @leaf when starting from the root of the tree
      */
-    private List<Example> retrieveN_Set(Data_Set trainingSet, Node leaf) {
+    private List<Example> retrieveN_Set(Node leaf) {
 
         List<Example> N_Set = leaf.getS();
         if(N_Set != null){
@@ -305,11 +310,11 @@ public class DecisionTree {
         for(int i=0; i < 10; i++)
             Ni_Set.put(i, new ArrayList<>());
 
-        System.out.println("trainingSet size in retrieveN_Set: " + trainingSet.size());
+        System.out.println("trainingSet size in retrieveN_Set: " + Main.trainingSet.size());
 
         Node destLeaf;
         int i = 0; // TODO: REMOVE ME
-        for(Example example : trainingSet.getExamples()){
+        for(Example example : Main.trainingSet.getExamples()){
             System.out.println("for trainingSet.getExamples()(Example) in retrieveN_Set()");
             destLeaf = this.execOn(example);
             if(destLeaf == leaf){
@@ -351,9 +356,9 @@ public class DecisionTree {
     /*
     Number of examples in the training set that get to @leaf when starting from the root of the tree and their label is @i
      */
-    private double calcN(Data_Set trainingSet, Node leaf, int i) {
+    private double calcN(Node leaf, int i) {
 
-        return this.retrieveN_Set(trainingSet, leaf, i).size();
+        return this.retrieveN_Set(leaf, i).size();
     }
 
 
@@ -361,14 +366,14 @@ public class DecisionTree {
     Returns a list of all the examples in @trainingSet that get to @leaf when starting from the root of the tree
     and(!!) and their labels are equals @i
      */
-    private List<Example> retrieveN_Set(Data_Set trainingSet, Node leaf, int i) {
+    private List<Example> retrieveN_Set(Node leaf, int i) {
 
         List<Example> Ni_Set = leaf.getS(i);
 
         if(Ni_Set != null)
             return Ni_Set;
 
-        retrieveN_Set(trainingSet, leaf);
+        retrieveN_Set(leaf);
 //        List<Example> N_Set = this.retrieveN_Set(trainingSet, leaf);
 //        List<Example> Ni_Set = new ArrayList<>();
 //

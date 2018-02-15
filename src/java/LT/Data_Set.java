@@ -3,10 +3,10 @@ package src.java.LT;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created by blumenra on 2/11/18.
@@ -14,14 +14,13 @@ import java.util.Map;
 public class Data_Set {
 
     private String csvFile;
+    private List<Example> examples = new ArrayList<>();
+    private Map<Integer, Integer> labelsInstances = new HashMap<>();
 
     public List<Example> getExamples() {
 
         return examples;
     }
-
-    private List<Example> examples = new ArrayList<>();
-    private Map<Integer, Integer> labelsInstances = new HashMap<>();
 
     public Data_Set(String csvFile){
 
@@ -39,24 +38,26 @@ public class Data_Set {
         this.initializeLabelsInstacesCount();
 
         String line;
-        String cvsSplitBy = ",";
-
+        String[] exampleStr;
         int i = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(this.csvFile))) {
 
             while ((line = br.readLine()) != null) {
 
+                System.out.println("Example number " + (i+1));
                 // use comma as separator
-                String[] exampleStr = line.split(cvsSplitBy);
-                int label = Integer.parseInt(exampleStr[0]);
-                this.examples.add(new Example(i+1, label, this.csvFile));
-                accLabelCount(label);
+//                System.out.println("exampleStr length: " + exampleStr.length);
+
+//                this.examples.add(new Example(i+1, label, this.csvFile));
+                this.examples.add(new Example(i+1, this.csvFile, line, 200));
+                accLabelCount(this.examples.get(this.examples.size()-1).getLabel());
                 i++;
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void initializeLabelsInstacesCount(){
@@ -182,4 +183,68 @@ public class Data_Set {
 
         System.out.println("Total amount of instances: " + totalInstances);
     }
+
+    public void loadPixelsFrom(int i, int j){
+
+        int pixelIndexInArray = (i*28)+j+1;
+        String strExample;
+        int k = 0;
+        int l = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader(this.csvFile))) {
+//
+            while ((strExample = br.readLine()) != null) {
+
+                Example e = this.examples.get(l);
+                if(e.getIndex() == k){
+
+                    e.setPixelIndex(pixelIndexInArray);
+                    int indexOfLastPixel = strExample.length() - 2;
+
+                    int indexOfLast = e.getPixelIndex() + e.getChunkSize();
+                    if(indexOfLast > indexOfLastPixel){
+
+                        e.InitializePixels(strExample, e.getPixelIndex(), indexOfLastPixel+1);
+                    }
+                    else{
+                        e.InitializePixels(strExample, e.getPixelIndex(), indexOfLast);
+                    }
+
+                    l++;
+                    if(l >= this.examples.size())
+                        return;
+
+                }
+
+                k++;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+//    public void updatePixles(int index){
+//
+//
+//        String line;
+//        String[] exampleStr;
+//        int i = 0;
+//        try (BufferedReader br = new BufferedReader(new FileReader(this.csvFile))) {
+//
+//            while ((line = br.readLine()) != null) {
+//
+////                System.out.println("Example number " + (i+1));
+////                // use comma as separator
+//////                System.out.println("exampleStr length: " + exampleStr.length);
+////
+//
+//
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
 }
